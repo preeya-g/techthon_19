@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.signals import user_logged_out
 from django.dispatch import receiver
 from django.contrib import messages
+from evelist.models import Event,Signup,EventImages
 # Create your views here.
 
 def register(request):
@@ -31,8 +32,12 @@ def register(request):
 def profile(request):
 	current_user = request.user
 	try:
-		current_user.volunteer
-		return render(request,'volunteer/profile.html')
+		v=current_user.volunteer
+		e=Event.objects.filter(venue=v.my_city)
+		context={
+		"Events":e
+		}
+		return render(request,'volunteer/profile.html',context)
 	except:
 		return render(request,'organization/home.html')
 

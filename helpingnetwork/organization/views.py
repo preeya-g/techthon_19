@@ -62,14 +62,17 @@ def a_image(request):
 	return render(request, 'organization/a_image.html',{'form': form2})
 
 def printo(request):
-	org=request.user.organization										
-	images=OrganizationImages.objects.filter(organization=org).first()	
-	context={
-		"name":org.name,
-		"disp":org.description,
-		"img":images,
+	if request.method == 'GET':
+		#org=request.user.organization							
+		o_org=request.GET.get('org')	
+		org=Organization.objects.filter(name=o_org).first()
+		images=OrganizationImages.objects.filter(organization=org)
+		context={
+			"name":org.name,
+			"disp":org.description,
+			"img":images,
 
-	}
+		}
 	return render(request, 'organization/orgview.html',context)
 
 
