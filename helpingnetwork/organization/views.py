@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-from .forms import OrganizationRegisterForm,CreateEventForm,AddImageForm
+from .forms import OrganizationRegisterForm,CreateEventForm,AddImageForm,AddOrgImage
 from .models import Organization,OrganizationImages
 from django.contrib.auth.models import User
 from django.contrib import messages
@@ -14,9 +14,11 @@ def signup(request):
 			form.save()
 			username = form.cleaned_data.get('username')
 			o_name = form.cleaned_data.get('name')
-			o_desp= form.cleaned_data.get('disp')
+			o_vision= form.cleaned_data.get('vision')
+			o_mission= form.cleaned_data.get('mission')
+			o_link=form.cleaned_data.get('link')
 			t_user=User.objects.filter(username=username).first()
-			p=Organization(user=t_user,name=o_name,description=o_desp)
+			p=Organization(user=t_user,name=o_name,vision=o_vision,mission=o_mission,link=o_link)
 			p.save()
 			messages.success(request, f'Account created for {username}!')
 			return redirect('register')
@@ -49,13 +51,19 @@ def aenv(request):
 	}
 	return render(request, 'organization/aenv.html',context)
 def changep(request):
-	
-	return render(request, 'organization/changep.html')
-def a_image(request):
 	if request.method == 'POST':
-		form2=AddImageForm(request.POST)
+		form2=AddOrgImage(request.POST,request.FILES)
 		if form2.is_valid():
 			form2.save()
+			return redirect('change_profile')
+	else:
+		form2=AddOrgImage()
+	return render(request, 'organization/changep.html',{'form': form2})
+def a_image(request):
+	if request.method == 'POST':
+		form2=AddImageForm(request.POST,request.FILES)
+		if form2.is_valid():
+			form2.save()	
 			return redirect('add_img')
 	else:
 		form2=AddImageForm()
@@ -69,7 +77,9 @@ def printo(request):
 		images=OrganizationImages.objects.filter(organization=org)
 		context={
 			"name":org.name,
-			"disp":org.description,
+			"vision":org.vision,
+			"mission":org.mission,
+			"link":org.link,
 			"img":images,
 
 		}

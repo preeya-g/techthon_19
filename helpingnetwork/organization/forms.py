@@ -1,17 +1,19 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-from .models import Organization
+from .models import Organization,OrganizationImages
 from evelist.models import Event,EventImages
 
 
 class OrganizationRegisterForm(UserCreationForm):
 	name=forms.CharField(required=True, label="Organization Name")
 	email = forms.EmailField()
-	disp = forms.CharField(max_length=200, widget=forms.TextInput({}),label="description")
+	vision = forms.CharField(max_length=200, widget=forms.TextInput({}),label="Vision")
+	mission = forms.CharField(max_length=200, widget=forms.TextInput({}),label="Mission")
+	link=forms.CharField(required=True, label="Link")
 	class Meta:
 		model = User
-		fields = ['username','email','password1','password2','name','disp']
+		fields = ['username','email','password1','password2','name','vision','mission','link']
 
 class OrganizationUpdate(forms.ModelForm):	
 	class Meta:
@@ -24,7 +26,10 @@ class CreateEventForm(forms.Form):
 	venue=forms.CharField(required=True, label="Venue")
 	date=forms.DateField(widget=forms.SelectDateWidget())
 
-
+class AddOrgImage(forms.ModelForm):
+	class Meta:
+		model=OrganizationImages
+		fields=['organization','image']
 
 class AddImageForm(forms.ModelForm):
 	class Meta:

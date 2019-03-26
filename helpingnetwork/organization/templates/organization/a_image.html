@@ -5,11 +5,12 @@
         <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             <fieldset class="form-group">
-                <legend class="border-bottom mb-8">Organization Registation</legend>
+                <legend class="border-bottom mb-8">Add Images</legend>
                 {{ form|crispy}}
             </fieldset>
             <div class="form-group">
-                <button class="btn btn-outline-info" type="submit">Register</button>
+                <button class="btn btn-outline-info" type="submit">Upload and Add another</button>
+                <button class="btn btn-outline-info" type="submit" href="{%url 'all_event'%}">Save And Exit</button>
             </div>
 </form>
 		</form>
