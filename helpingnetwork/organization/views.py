@@ -54,7 +54,9 @@ def changep(request):
 	if request.method == 'POST':
 		form2=AddOrgImage(request.POST,request.FILES)
 		if form2.is_valid():
-			form2.save()
+			new_org=form2.save(commit=False)	
+			new_org.organization=request.user.organization
+			new_org.save()
 			return redirect('change_profile')
 	else:
 		form2=AddOrgImage()
@@ -63,7 +65,7 @@ def a_image(request):
 	if request.method == 'POST':
 		form2=AddImageForm(request.POST,request.FILES)
 		if form2.is_valid():
-			form2.save()	
+			form2.save()
 			return redirect('add_img')
 	else:
 		form2=AddImageForm()

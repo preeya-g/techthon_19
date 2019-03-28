@@ -29,7 +29,8 @@ class CreateEventForm(forms.Form):
 class AddOrgImage(forms.ModelForm):
 	class Meta:
 		model=OrganizationImages
-		fields=['organization','image']
+		fields=['image']
+		exclude=['organization']
 
 class AddImageForm(forms.ModelForm):
 	class Meta:
