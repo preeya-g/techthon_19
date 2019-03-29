@@ -15,16 +15,24 @@ class OrganizationRegisterForm(UserCreationForm):
 		model = User
 		fields = ['username','email','password1','password2','name','vision','mission','link']
 
-class OrganizationUpdate(forms.ModelForm):	
+class OrganizationUpdate(forms.ModelForm):
 	class Meta:
-		model=Organization		
+		model=Organization
 		fields = ['name']
 
+'''
 class CreateEventForm(forms.Form):
 	name=forms.CharField(required=True, label="Event Name")
 	description = forms.CharField(max_length=200, widget=forms.TextInput({}),label="description")
 	venue=forms.CharField(required=True, label="Venue")
 	date=forms.DateField(widget=forms.SelectDateWidget())
+'''
+class CreateEventForm(forms.ModelForm):
+	class Meta:
+		model=Event
+		labels={"name":"Event Name","description":"Add Description","eventprofileImage":"Add Event Image"}
+		fields=['name','description','venue','date','eventprofileImage']
+		exclude=['organizer']
 
 class AddOrgImage(forms.ModelForm):
 	class Meta:

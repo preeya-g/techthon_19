@@ -4,7 +4,7 @@ from volunteer.models import City,Volunteer
 from django.utils import timezone
 from organization.models import Organization
 
-	
+
 class Event(models.Model):
 	volunteers= models.ManyToManyField(Volunteer,through='Signup')
 	name=models.CharField(max_length=100)
@@ -12,6 +12,7 @@ class Event(models.Model):
 	organizer=models.ForeignKey(Organization,on_delete=models.CASCADE)
 	venue=models.ForeignKey(City,on_delete=models.CASCADE)
 	date=models.DateTimeField()
+	eventprofileImage=models.ImageField(default='default.jpg', upload_to='eventprofileImage')
 	def __str__(self):
 		return self.name
 class Signup(models.Model):
