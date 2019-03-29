@@ -28,16 +28,10 @@ def signup(request):
 
 def cenv(request):
 	if request.method == 'POST':
-		form1=CreateEventForm(request.POST)
+		form1=CreateEventForm(request.POST,request.FILES)
 		if form1.is_valid():
-			e_name=form1.cleaned_data.get('name')
-			e_description=form1.cleaned_data.get('description')
-			cityy=form1.cleaned_data.get('venue')
-			e_venue=City.objects.filter(name=cityy).first()			
-			e_date=form1.cleaned_data.get('date')
-			e_user=User.objects.filter(username=request.user).first()
-			e_organizer=e_user.organization
-			new_event=Event(name=e_name,venue=e_venue,date=e_date,description=e_description,organizer=e_organizer)
+			new_event=form1.save(commit=False)
+			new_event.organizer=request.user.organization
 			new_event.save()
 			return redirect('add_img')
 	else:
@@ -47,14 +41,16 @@ def aenv(request):
 	c_organization=request.user.organization
 	allevents=Event.objects.filter(organizer=c_organization)
 	context={
-		"events":allevents	
+		"events":allevents
 	}
 	return render(request, 'organization/aenv.html',context)
 def changep(request):
 	if request.method == 'POST':
 		form2=AddOrgImage(request.POST,request.FILES)
 		if form2.is_valid():
-			form2.save()
+			new_org=form2.save(commit=False)
+			new_org.organization=request.user.organization
+			new_org.save()
 			return redirect('change_profile')
 	else:
 		form2=AddOrgImage()
@@ -63,7 +59,7 @@ def a_image(request):
 	if request.method == 'POST':
 		form2=AddImageForm(request.POST,request.FILES)
 		if form2.is_valid():
-			form2.save()	
+			form2.save()
 			return redirect('add_img')
 	else:
 		form2=AddImageForm()
@@ -71,8 +67,7 @@ def a_image(request):
 
 def printo(request):
 	if request.method == 'GET':
-		#org=request.user.organization							
-		o_org=request.GET.get('org')	
+		o_org=request.GET.get('org')
 		org=Organization.objects.filter(name=o_org).first()
 		images=OrganizationImages.objects.filter(organization=org)
 		context={
@@ -84,23 +79,3 @@ def printo(request):
 
 		}
 	return render(request, 'organization/orgview.html',context)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

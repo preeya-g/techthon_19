@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from .models import Volunteer,City
 
-
+'''
 class UserRegisterForm(UserCreationForm):
 	first_name=forms.CharField(required=True, label="First_Name")
 	last_name=forms.CharField(required=True, label="Last_Name")
@@ -20,4 +20,24 @@ class UserRegisterForm(UserCreationForm):
 		if commit:
 			user.save()
 		return user
-	
+'''
+class UserRegisterForm(UserCreationForm):
+	first_name=forms.CharField(required=True, label="First Name")
+	last_name=forms.CharField(required=True, label="Last Name")
+	email = forms.EmailField()
+	class Meta:
+		model = User
+		fields = ['username','email','password1','password2','first_name','last_name']
+	def save(self,commit = True):
+		user = super(UserRegisterForm, self).save(commit = False)
+		user.first_name = self.cleaned_data['first_name']
+		user.last_name = self.cleaned_data['last_name']
+		user.email = self.cleaned_data["email"]
+		if commit:
+			user.save()
+		return user
+class VolunteerRegisterForm(forms.ModelForm):
+	class Meta:
+		model= Volunteer
+		fields = ['my_city']
+		exclude=['user']
